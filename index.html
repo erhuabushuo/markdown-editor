@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Markdown Editor</title>
+    <link href="https://fonts.lug.ustc.edu.cn/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="notebook">
+        <!-- 侧面板 -->
+        <aside class="side-bar">
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <!-- 添加笔记按钮 -->
+                <button @click="addNote" :title="addButtonTitle"><i class="material-icons">add</i> 添加笔记</button>
+            </div>
+            <div class="notes">
+                <div class="note" :class="{selected: note === selectedNote}" v-for="note of sortedNotes" @click="selectNode(note)">{{ note.title }}</div>
+            </div>
+        </aside>
+        <template v-if="selectedNote">
+            <!-- 主面板-->
+            <section class="main">
+                <div class="toolbar">
+                    <input v-model="selectedNote.title" placeholder="标题" />
+                    <button @click="favoriteNote" title="收藏笔记"><i class="material-icons">{{ selectedNote.favorite ? 'star' : 'star_border' }}</i></button>
+                    <button @click="removeNote" title="删除笔记"><i class="material-icons">delete</i></button>
+                </div>
+                <textarea v-model="selectedNote.content"></textarea>
+                <div class="toolbar status-bar">
+                    <span class="date">
+                        <span class="label">创建于</span>
+                        <span class="value">{{ selectedNote.created | date }}</span>
+                    </span>
+                    <span class="lines">
+                        <span class="label">行数</span>
+                        <span class="value">{{ linesCount }}</span>
+                    </span>
+                    <span class="characters">
+                        <span class="label">字数</span>
+                        <span class="value">{{ charactersCount }}</span>
+                    </span>
+                </div>
+            </section>
+
+            <!--预览面板 -->
+            <aside class="preview" v-html="notePreview"></aside>
+        </template>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
